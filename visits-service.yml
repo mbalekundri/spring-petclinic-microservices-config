@@ -1,7 +1,5 @@
 ﻿spring:
-  config:
-    activate:
-      on-profile: default
+  profiles: default
 eureka:
   instance:
     # enable to register multiple app instances with a random server port

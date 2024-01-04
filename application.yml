@@ -8,10 +8,9 @@ server:
 
 # embedded database init, supports mysql too trough the 'mysql' spring profile
 spring:
-  sql:
-    init:
-      schema-locations: classpath*:db/hsqldb/schema.sql
-      data-locations: classpath*:db/hsqldb/data.sql
+  datasource:
+    schema: classpath*:db/hsqldb/schema.sql
+    data: classpath*:db/hsqldb/data.sql
   sleuth:
     sampler:
       probability: 1.0
@@ -35,7 +34,6 @@ management.endpoints.web.exposure.include: "*"
 # Waiting issue https://github.com/spring-projects/spring-boot/issues/13042
 spring.cloud.refresh.refreshable: false
 
-
 # Logging
 logging.level.org.springframework: INFO
 
@@ -49,21 +47,18 @@ management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: "*"
   metrics:
     export:
       prometheus:
         enabled: true
-  tracing:
-    sampling:
-      probability: 1
 
 # Chaos Engineering
 ---
 spring:
   config:
     activate:
-      on-profile: chaos-monkey      
+      on-profile: chaos-monkey
 management.endpoint.chaosmonkey.enabled: true
 chaos:
   monkey:
@@ -80,12 +75,12 @@ spring:
   config:
     activate:
       on-profile: mysql
+  sql.init.mode: always
+  sql.init.platform: mysql
   datasource:
+    schema: classpath*:db/mysql/schema.sql
+    data: classpath*:db/mysql/data.sql
     url: jdbc:mysql://localhost:3306/petclinic?useSSL=false
     username: root
     password: petclinic
-  sql:
-    init:
-      schema-locations: classpath*:db/mysql/schema.sql
-      data-locations: classpath*:db/mysql/data.sql
-      init: ALWAYS
+    initialization-mode: ALWAYS
